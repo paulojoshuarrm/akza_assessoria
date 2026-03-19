@@ -68,26 +68,42 @@ h1.hh{font-size:clamp(42px,4.4vw,72px);font-weight:800;line-height:1.06;letter-s
 .hright-glow{position:absolute;top:-10%;right:-15%;width:70%;height:70%;background:radial-gradient(ellipse,rgba(255,255,255,.45) 0%,rgba(223,234,232,.25) 45%,transparent 70%);filter:blur(60px);pointer-events:none}
 .hright-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(14,25,30,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(14,25,30,.06) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 40%,transparent 100%);pointer-events:none}
 .hpx{position:absolute}
-.hpx-main{top:50%;left:50%;transform:translate(-55%,-52%)}
-.hpx-dark{bottom:10%;right:8%}
-.hpx-p1{top:12%;left:8%}
-.hpx-p2{bottom:16%;left:12%}
+.hpx-ring{top:50%;left:50%;margin-top:-150px;margin-left:-150px}
+.hpx-main{bottom:10%;left:6%}
+.hpx-dark{top:12%;right:6%}
+.hpx-p1{top:10%;left:10%}
+.hpx-p2{bottom:12%;right:8%}
+
+/* Ring visual */
+.hring-visual{position:relative;width:300px;height:300px;display:flex;align-items:center;justify-content:center}
+.hr{position:absolute;border-radius:50%;border:1.5px solid rgba(14,25,30,.1)}
+.hr1{width:300px;height:300px;border-color:rgba(187,201,199,.35);border-top-color:rgba(14,25,30,.2);animation:ringspin 28s linear infinite}
+.hr2{width:210px;height:210px;border-color:rgba(187,201,199,.22);border-right-color:rgba(14,25,30,.18);animation:ringspin 20s linear infinite reverse}
+.hr3{width:130px;height:130px;border-color:rgba(187,201,199,.28);border-bottom-color:var(--sage);border-width:2px;animation:ringspin 14s linear infinite}
+@keyframes ringspin{to{transform:rotate(360deg)}}
+.hr-dots{position:absolute;inset:0;pointer-events:none}
+.hr-dot{position:absolute;width:7px;height:7px;border-radius:50%;background:var(--sage)}
+.hrd1{top:0;left:50%;transform:translateX(-50%);margin-top:-4px}
+.hrd2{top:50%;right:0;transform:translateY(-50%);margin-right:-4px;background:var(--dark);width:5px;height:5px}
+.hrd3{bottom:0;left:30%;transform:translateX(-50%);margin-bottom:-4px;background:rgba(14,25,30,.3);width:5px;height:5px}
+.hr-center{width:72px;height:72px;background:var(--dark);border-radius:18px;display:flex;align-items:center;justify-content:center;z-index:2;box-shadow:0 16px 48px rgba(14,25,30,.3),0 4px 12px rgba(14,25,30,.15)}
+.hr-center svg{stroke:var(--white)}
+
+/* White service card */
 .hcard{background:var(--white);border-radius:20px;box-shadow:0 24px 72px rgba(14,25,30,.14),0 4px 16px rgba(14,25,30,.06);padding:24px 26px}
-.hcard-main{width:270px}
-.hcard-head{display:flex;align-items:center;gap:8px;margin-bottom:18px}
+.hcard-main{width:220px}
+.hcard-head{display:flex;align-items:center;gap:8px;margin-bottom:16px}
 .hcard-head-dot{width:8px;height:8px;border-radius:50%;background:rgba(187,201,199,.4)}
 .hcard-head-dot.active{background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2)}
 .hcard-head-label{font-size:12px;font-weight:700;color:var(--dark);flex:1;letter-spacing:.01em}
 .hcard-head-badge{font-size:10px;font-weight:700;background:rgba(34,197,94,.12);color:#16a34a;padding:3px 8px;border-radius:100px;letter-spacing:.03em}
-.hbar-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.hbar-row:last-of-type{margin-bottom:0}
-.hbar-label{font-size:11px;color:var(--gray);font-weight:500;width:82px;flex-shrink:0}
-.hbar-track{flex:1;height:5px;background:rgba(187,201,199,.25);border-radius:100px;overflow:hidden}
-.hbar-fill{height:100%;background:linear-gradient(90deg,var(--dark),var(--sage));border-radius:100px}
-.hbar-pct{font-size:10px;color:var(--dark);font-weight:700;width:26px;text-align:right;flex-shrink:0}
-.hcard-metric{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.hcard-metric-val{font-size:22px;font-weight:800;color:var(--dark);letter-spacing:-.03em}
-.hcard-metric-lbl{font-size:11px;color:var(--gray);line-height:1.4}
+.hcsvc-grid{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+.hcsvc{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--dark);font-weight:600;letter-spacing:-.005em}
+.hcsvc-dot{width:6px;height:6px;background:var(--sage);border-radius:50%;flex-shrink:0}
+.hcard-footer{display:flex;align-items:center;gap:8px;padding-top:14px;border-top:1px solid var(--border)}
+.hcard-footer-txt{font-size:11px;color:var(--gray);font-weight:500}
+
+/* Dark card */
 .hcard-dark{background:var(--dark);border-radius:18px;padding:22px 24px;width:200px;box-shadow:0 20px 60px rgba(14,25,30,.25)}
 .hcard-dark-tag{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin-bottom:10px}
 .hcard-dark-title{font-size:20px;font-weight:800;color:var(--white);letter-spacing:-.025em;line-height:1.2;margin-bottom:14px}

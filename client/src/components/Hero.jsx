@@ -6,21 +6,23 @@ export default function Hero() {
   const { open } = useContact()
 
   useEffect(() => {
-    // Float animations on inner elements
-    gsap.to('.hcard-main',  { y: -12, duration: 3.2, ease: 'sine.inOut', repeat: -1, yoyo: true })
-    gsap.to('.hcard-dark',  { y: -10, duration: 3.8, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 1 })
-    gsap.to('.hpill1',      { y: -8,  duration: 2.6, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 0.4 })
-    gsap.to('.hpill2',      { y: -8,  duration: 3.0, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 1.8 })
+    // Float animations
+    gsap.to('.hring-visual', { y: -14, duration: 4.0, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 0.2 })
+    gsap.to('.hcard-main',   { y: -8,  duration: 3.2, ease: 'sine.inOut', repeat: -1, yoyo: true })
+    gsap.to('.hcard-dark',   { y: -10, duration: 3.8, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 1 })
+    gsap.to('.hpill1',       { y: -8,  duration: 2.6, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 0.4 })
+    gsap.to('.hpill2',       { y: -8,  duration: 3.0, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 1.8 })
 
-    // Parallax on wrapper divs (separate from float)
+    // Parallax on wrapper divs
     const onMove = (e) => {
       const x = (e.clientX / innerWidth  - 0.5) * 2
       const y = (e.clientY / innerHeight - 0.5) * 2
-      gsap.to('.hpx-main', { x: x * 14,  y: y * 9,  duration: 1.8, ease: 'power2.out' })
-      gsap.to('.hpx-dark', { x: x * -10, y: y * -7, duration: 2.2, ease: 'power2.out' })
-      gsap.to('.hpx-p1',   { x: x * -16, y: y * -11,duration: 1.5, ease: 'power2.out' })
-      gsap.to('.hpx-p2',   { x: x * 12,  y: y * 9,  duration: 2.0, ease: 'power2.out' })
-      gsap.to('.hright-glow', { x: x * 6, y: y * 5, duration: 3.0, ease: 'power2.out' })
+      gsap.to('.hpx-ring',    { x: x * 7,   y: y * 5,   duration: 2.5, ease: 'power2.out' })
+      gsap.to('.hpx-main',    { x: x * 14,  y: y * 9,   duration: 1.8, ease: 'power2.out' })
+      gsap.to('.hpx-dark',    { x: x * -10, y: y * -7,  duration: 2.2, ease: 'power2.out' })
+      gsap.to('.hpx-p1',      { x: x * -16, y: y * -11, duration: 1.5, ease: 'power2.out' })
+      gsap.to('.hpx-p2',      { x: x * 12,  y: y * 9,   duration: 2.0, ease: 'power2.out' })
+      gsap.to('.hright-glow', { x: x * 6,   y: y * 5,   duration: 3.0, ease: 'power2.out' })
     }
     window.addEventListener('mousemove', onMove)
     return () => window.removeEventListener('mousemove', onMove)
@@ -83,7 +85,26 @@ export default function Hero() {
         <div className="hright-glow" />
         <div className="hright-grid" />
 
-        {/* Main white card */}
+        {/* Abstract ring visual */}
+        <div className="hpx hpx-ring">
+          <div className="hring-visual">
+            <div className="hr hr1" />
+            <div className="hr hr2" />
+            <div className="hr hr3" />
+            <div className="hr-dots">
+              <div className="hr-dot hrd1" />
+              <div className="hr-dot hrd2" />
+              <div className="hr-dot hrd3" />
+            </div>
+            <div className="hr-center">
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+                <path d="M5 13h16M13 5l8 8-8 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        {/* White service card */}
         <div className="hpx hpx-main">
           <div className="hcard hcard-main">
             <div className="hcard-head">
@@ -91,25 +112,17 @@ export default function Hero() {
               <span className="hcard-head-label">Presença Digital</span>
               <div className="hcard-head-badge">Ativo</div>
             </div>
-            <div className="hcard-bars">
-              {[
-                { label: 'Comunicação', pct: 88 },
-                { label: 'Tecnologia',  pct: 74 },
-                { label: 'Estratégia',  pct: 92 },
-                { label: 'Redes Sociais', pct: 80 },
-              ].map(item => (
-                <div key={item.label} className="hbar-row">
-                  <span className="hbar-label">{item.label}</span>
-                  <div className="hbar-track">
-                    <div className="hbar-fill" style={{ width: `${item.pct}%` }} />
-                  </div>
-                  <span className="hbar-pct">{item.pct}%</span>
+            <div className="hcsvc-grid">
+              {['Comunicação', 'Tecnologia', 'Estratégia', 'Redes Sociais'].map(s => (
+                <div key={s} className="hcsvc">
+                  <div className="hcsvc-dot" />
+                  <span>{s}</span>
                 </div>
               ))}
             </div>
-            <div className="hcard-metric">
-              <div className="hcard-metric-val">↑ 32%</div>
-              <div className="hcard-metric-lbl">crescimento médio dos clientes</div>
+            <div className="hcard-footer">
+              <span className="pulse-dot" />
+              <span className="hcard-footer-txt">Gestão ativa</span>
             </div>
           </div>
         </div>
