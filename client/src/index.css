@@ -208,8 +208,8 @@ footer{background:var(--black);padding:52px 64px;display:flex;justify-content:sp
 .fcopy{font-size:11px;color:rgba(255,255,255,.25)}
 
 /* CONTACT MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(5,9,10,.7);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;transition:opacity .4s}
-.modal-overlay.open{opacity:1}
+.modal-overlay{position:fixed;inset:0;background:rgba(5,9,10,.7);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .4s}
+.modal-overlay.open{opacity:1;pointer-events:all}
 .modal{background:var(--white);border-radius:24px;padding:52px 48px;width:100%;max-width:520px;position:relative;transform:translateY(40px) scale(.97);transition:transform .45s var(--easeOut)}
 .modal-overlay.open .modal{transform:translateY(0) scale(1)}
 .modal-close{position:absolute;top:20px;right:20px;width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:none;display:flex;align-items:center;justify-content:center;cursor:none;transition:background .3s,border-color .3s}
