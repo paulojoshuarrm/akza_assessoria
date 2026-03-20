@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import gsap from 'gsap'
 
 const steps = [
@@ -9,33 +9,40 @@ const steps = [
 ]
 
 export default function Process() {
+  const [active, setActive] = useState(0)
+
   useEffect(() => {
-    const timelines = []
-
-    document.querySelectorAll('.pstep').forEach(step => {
-      const circ = step.querySelector('.pcirc')
-      const title = step.querySelector('.ptt')
-      const desc = step.querySelector('.pds')
-      const tl = gsap.timeline({ paused: true })
-        .to(circ,  { scale: 1.12, background: '#0E191E', color: '#fff', borderColor: '#0E191E', duration: .32, ease: 'back.out(2)' }, 0)
-        .to(title, { y: -3, color: '#0E191E', duration: .28, ease: 'power2.out' }, 0)
-        .to(desc,  { opacity: 1, duration: .28, ease: 'power2.out' }, 0)
-
-      const enter = () => tl.play()
-      const leave = () => tl.reverse()
-      step.addEventListener('mouseenter', enter)
-      step.addEventListener('mouseleave', leave)
-      timelines.push({ tl, step, enter, leave })
+    // Scroll reveal animations
+    document.querySelectorAll('.pstep').forEach((step, i) => {
+      gsap.fromTo(step,
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.6, delay: i * 0.1, ease: 'power2.out' }
+      )
     })
-
-    return () => {
-      timelines.forEach(({ tl, step, enter, leave }) => {
-        tl.kill()
-        step.removeEventListener('mouseenter', enter)
-        step.removeEventListener('mouseleave', leave)
-      })
-    }
   }, [])
+
+  useEffect(() => {
+    // Animate active step
+    const activeStep = document.querySelector(`.pstep[data-step="${active}"]`)
+    if (!activeStep) return
+
+    const circle = activeStep.querySelector('.pcirc')
+    const line = activeStep.querySelector('.pline')
+    const content = activeStep.querySelector('.pcontent')
+
+    gsap.to(circle, { scale: 1.15, duration: 0.4, ease: 'back.out(2)' })
+    gsap.to(line, { scaleY: 1, opacity: 1, duration: 0.5, ease: 'power2.out' })
+    gsap.to(content, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' })
+
+    // Reset other steps
+    document.querySelectorAll('.pstep').forEach((step, i) => {
+      if (i !== active) {
+        gsap.to(step.querySelector('.pcirc'), { scale: 1, duration: 0.3 })
+        gsap.to(step.querySelector('.pline'), { scaleY: 0, opacity: 0.3, duration: 0.3 })
+        gsap.to(step.querySelector('.pcontent'), { opacity: 0.6, y: 8, duration: 0.3 })
+      }
+    })
+  }, [active])
 
   return (
     <section className="proc" id="processo">
@@ -45,12 +52,23 @@ export default function Process() {
           <h2 className="st" style={{ textAlign: 'center' }}>Trabalhar com a AKZA é simples.</h2>
           <p className="sp" style={{ margin: '0 auto', textAlign: 'center' }}>Um processo claro e estruturado para transformar a presença digital da sua empresa.</p>
         </div>
-        <div className="psteps">
-          {steps.map(s => (
-            <div key={s.n} className="pstep">
-              <div className="pcirc">{s.n}</div>
-              <h3 className="ptt">{s.title}</h3>
-              <p className="pds">{s.desc}</p>
+
+        <div className="psteps-new">
+          {steps.map((s, i) => (
+            <div
+              key={s.n}
+              className="pstep"
+              data-step={i}
+              onMouseEnter={() => setActive(i)}
+            >
+              <div className="pstep-inner">
+                <div className="pcirc">{s.n}</div>
+                <div className="pline" />
+              </div>
+              <div className="pcontent" style={{ opacity: i === 0 ? 1 : 0.6, y: i === 0 ? 0 : 8 }}>
+                <h3 className="ptt">{s.title}</h3>
+                <p className="pds">{s.desc}</p>
+              </div>
             </div>
           ))}
         </div>
