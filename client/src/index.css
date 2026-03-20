@@ -21,7 +21,7 @@ body{font-family:'Inter',sans-serif;background:var(--white);color:var(--black);o
 
 /* NAV */
 .nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:24px 64px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .4s,box-shadow .4s}
-.nav.s{background:rgba(255,255,255,.93);backdrop-filter:blur(14px);padding:16px 64px;box-shadow:0 1px 0 rgba(0,0,0,.07)}
+.nav.s{background:rgba(255,255,255,.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:16px 64px;box-shadow:0 4px 20px rgba(0,0,0,.08),inset 0 1px 0 rgba(255,255,255,.5);border-bottom:1px solid rgba(187,201,199,.15)}
 .nav-logo img{height:30px}
 .nav-links{display:flex;align-items:center;gap:36px;list-style:none}
 .nav-links a{text-decoration:none;color:var(--black);font-size:14px;font-weight:500;position:relative;transition:color .3s}
