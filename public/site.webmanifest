@@ -1,0 +1,12 @@
+{
+  "name": "AKZA Digital Strategy",
+  "short_name": "AKZA",
+  "description": "Estruturamos e amplificamos a presença digital das empresas.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#05090A",
+  "theme_color": "#05090A",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
