@@ -40,11 +40,10 @@ function ElegantShape({
       <motion.div
         style={{ x: px, y: py, rotate: tilt, willChange: "transform" }}
       >
-        {/* Continuous float layer */}
-        <motion.div
-          animate={{ y: [0, 15, 0] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          style={{ width, height, position: "relative" }}
+        {/* Continuous float — CSS keyframe (GPU, no per-frame JS) */}
+        <div
+          className="hero-shape-float"
+          style={{ width, height, position: "relative", willChange: "transform" }}
         >
           <div
             style={{
@@ -70,7 +69,7 @@ function ElegantShape({
               }}
             />
           </div>
-        </motion.div>
+        </div>
       </motion.div>
     </motion.div>
   );
@@ -235,6 +234,14 @@ function HeroShapes({ ready }) {
       ))}
       <style>{`
         .hero-shapes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+        @keyframes heroShapeFloat {
+          0%, 100% { transform: translateY(0); }
+          50%      { transform: translateY(15px); }
+        }
+        .hero-shape-float { animation: heroShapeFloat 12s ease-in-out infinite; }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-shape-float { animation: none !important; }
+        }
       `}</style>
     </div>
   );
@@ -266,8 +273,11 @@ function StaggeredHeading({ ready }) {
           style={{
             display: "block",
             overflow: "hidden",
-            paddingBottom: "0.22em",
-            marginBottom: "-0.15em",
+            // Generous padding-bottom so the italic Instrument Serif "g"
+            // descender (in "digital") never clips at the row edge.
+            paddingBottom: "0.35em",
+            marginBottom: "-0.25em",
+            lineHeight: 1.18,
           }}
         >
           {row.map((word, wi) => {

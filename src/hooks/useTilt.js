@@ -2,7 +2,11 @@ import { useEffect, useRef } from "react";
 
 /**
  * 3D tilt + cursor-follow gradient on hover.
- * Sets CSS vars --mx, --my (0..1 within element) on the ref.
+ *
+ * Sets CSS vars `--mx` / `--my` (0..100%) on the ref so descendants can read
+ * them in plain CSS without any React-side updates. The RAF loop self-suspends
+ * when the lerp settles, then resumes on the next mouse event — so cards that
+ * aren't being interacted with cost zero per-frame work.
  */
 export function useTilt({ max = 6, scale = 1.015 } = {}) {
   const ref = useRef(null);
@@ -13,9 +17,22 @@ export function useTilt({ max = 6, scale = 1.015 } = {}) {
     if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    let raf;
+    let raf = 0;
     const cur = { rx: 0, ry: 0, s: 1, mx: 0.5, my: 0.5 };
     const target = { rx: 0, ry: 0, s: 1, mx: 0.5, my: 0.5 };
+
+    const apply = () => {
+      el.style.transform = `perspective(900px) rotateX(${cur.rx}deg) rotateY(${cur.ry}deg) scale(${cur.s})`;
+      el.style.setProperty("--mx", `${cur.mx * 100}%`);
+      el.style.setProperty("--my", `${cur.my * 100}%`);
+    };
+
+    const settled = () =>
+      Math.abs(cur.rx - target.rx) < 0.01 &&
+      Math.abs(cur.ry - target.ry) < 0.01 &&
+      Math.abs(cur.s - target.s) < 0.0005 &&
+      Math.abs(cur.mx - target.mx) < 0.001 &&
+      Math.abs(cur.my - target.my) < 0.001;
 
     const tick = () => {
       const lerp = (a, b, k) => a + (b - a) * k;
@@ -24,10 +41,16 @@ export function useTilt({ max = 6, scale = 1.015 } = {}) {
       cur.s = lerp(cur.s, target.s, 0.14);
       cur.mx = lerp(cur.mx, target.mx, 0.18);
       cur.my = lerp(cur.my, target.my, 0.18);
-      el.style.transform = `perspective(900px) rotateX(${cur.rx}deg) rotateY(${cur.ry}deg) scale(${cur.s})`;
-      el.style.setProperty("--mx", `${cur.mx * 100}%`);
-      el.style.setProperty("--my", `${cur.my * 100}%`);
+      apply();
+      if (settled()) {
+        raf = 0;
+        return; // stop until next event
+      }
       raf = requestAnimationFrame(tick);
+    };
+
+    const ensureRAF = () => {
+      if (!raf) raf = requestAnimationFrame(tick);
     };
 
     const onMove = (e) => {
@@ -39,6 +62,7 @@ export function useTilt({ max = 6, scale = 1.015 } = {}) {
       target.mx = x;
       target.my = y;
       target.s = scale;
+      ensureRAF();
     };
     const onLeave = () => {
       target.rx = 0;
@@ -46,13 +70,16 @@ export function useTilt({ max = 6, scale = 1.015 } = {}) {
       target.s = 1;
       target.mx = 0.5;
       target.my = 0.5;
+      ensureRAF();
     };
+
+    // Apply initial CSS vars once so descendant rules don't flicker
+    apply();
 
     el.addEventListener("mousemove", onMove);
     el.addEventListener("mouseleave", onLeave);
-    raf = requestAnimationFrame(tick);
     return () => {
-      cancelAnimationFrame(raf);
+      if (raf) cancelAnimationFrame(raf);
       el.removeEventListener("mousemove", onMove);
       el.removeEventListener("mouseleave", onLeave);
     };

@@ -1,5 +1,3 @@
-import { useRef } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import Reveal from "./Reveal";
 import { useTilt } from "../hooks/useTilt";
@@ -43,12 +41,10 @@ function GlassImageIcon({ src, alt }) {
           zIndex: 0,
         }}
       />
-      {/* moving glow halo */}
-      <motion.span
+      {/* moving glow halo — CSS keyframe rotation (GPU, no React updates) */}
+      <span
         aria-hidden="true"
         className="service-icon-glow"
-        animate={{ rotate: [0, 360] }}
-        transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
         style={{
           position: "absolute",
           inset: -2,
@@ -58,6 +54,7 @@ function GlassImageIcon({ src, alt }) {
           opacity: 0.7,
           filter: "blur(10px)",
           pointerEvents: "none",
+          willChange: "transform",
         }}
       />
       {/* bright center halo */}
@@ -74,14 +71,13 @@ function GlassImageIcon({ src, alt }) {
           zIndex: 1,
         }}
       />
-      {/* the actual realistic glass image */}
-      <motion.img
+      {/* the actual realistic glass image — CSS keyframe float */}
+      <img
         src={src}
         alt={alt}
         loading="lazy"
         decoding="async"
-        animate={{ y: [0, -4, 0] }}
-        transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+        className="service-icon-img"
         style={{
           position: "relative",
           zIndex: 2,
@@ -91,6 +87,7 @@ function GlassImageIcon({ src, alt }) {
           mixBlendMode: "screen",
           filter:
             "brightness(1.28) contrast(1.06) drop-shadow(0 6px 14px rgba(0,0,0,0.55)) drop-shadow(0 0 22px rgba(187,224,210,0.55))",
+          willChange: "transform",
         }}
       />
     </div>
@@ -243,33 +240,15 @@ const SERVICES = [
 /* ─── Card with mouse-driven spotlight + tilt ──────────────────── */
 
 function ServiceCard({ service, index }) {
+  // useTilt already publishes `--mx` / `--my` on the card via direct DOM —
+  // the spotlight reads those CSS vars without any React/framer overhead.
   const tiltRef = useTilt({ max: 8, scale: 1.02 });
-  const cardRef = useRef(null);
-
-  // Smooth mouse position for the spotlight glow
-  const mx = useMotionValue(50);
-  const my = useMotionValue(50);
-  const sx = useSpring(mx, { stiffness: 200, damping: 30 });
-  const sy = useSpring(my, { stiffness: 200, damping: 30 });
-  const lightX = useTransform(sx, (v) => `${v}%`);
-  const lightY = useTransform(sy, (v) => `${v}%`);
-
-  const onMove = (e) => {
-    const r = cardRef.current?.getBoundingClientRect();
-    if (!r) return;
-    mx.set(((e.clientX - r.left) / r.width) * 100);
-    my.set(((e.clientY - r.top) / r.height) * 100);
-  };
 
   return (
     <Reveal as="div" delay={0.1 + index * 0.08}>
       <Link
         to={`/projetos#${service.linkCat}`}
-        ref={(el) => {
-          tiltRef.current = el;
-          cardRef.current = el;
-        }}
-        onMouseMove={onMove}
+        ref={tiltRef}
         data-cursor="hover"
         aria-label={`Ver projetos de ${service.title.replace("\n", " ")}`}
         className="service-card"
@@ -297,18 +276,15 @@ function ServiceCard({ service, index }) {
         {/* unique decorative pattern */}
         <CardPattern kind={service.pattern} />
 
-        {/* mouse-following spotlight */}
-        <motion.span
+        {/* mouse-following spotlight — uses --mx/--my CSS vars set by useTilt */}
+        <span
           aria-hidden="true"
           className="card-spotlight"
           style={{
             position: "absolute",
             inset: 0,
-            background: useTransform(
-              [lightX, lightY],
-              ([x, y]) =>
-                `radial-gradient(420px circle at ${x} ${y}, rgba(127,182,164,0.22), transparent 55%)`
-            ),
+            background:
+              "radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(127,182,164,0.22), transparent 55%)",
             opacity: 0,
             transition: "opacity 320ms ease",
             pointerEvents: "none",
@@ -624,6 +600,21 @@ export default function Services() {
       </div>
 
       <style>{`
+        /* CSS-driven continuous animations — GPU-accelerated, no JS per frame */
+        @keyframes svcHaloSpin { to { transform: rotate(360deg); } }
+        .service-icon-glow { animation: svcHaloSpin 22s linear infinite; }
+
+        @keyframes svcImgFloat {
+          0%, 100% { transform: translateY(0); }
+          50%      { transform: translateY(-4px); }
+        }
+        .service-icon-img { animation: svcImgFloat 4.5s ease-in-out infinite; }
+
+        @media (prefers-reduced-motion: reduce) {
+          .service-icon-glow,
+          .service-icon-img { animation: none !important; }
+        }
+
         .service-card:hover {
           border-color: rgba(127,182,164,0.32) !important;
           box-shadow:
