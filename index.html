@@ -66,6 +66,16 @@
     <!-- Preload the brand logo so the cinematic loading screen never waits on it -->
     <link rel="preload" as="image" href="/logo-sage-light.webp" type="image/webp" />
 
+    <!-- Fonts: parallel-load via <link> (was @import in CSS, which serialized). -->
+    <link
+      rel="stylesheet"
+      href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700,800&f[]=jetbrains-mono@400,500&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&display=swap"
+    />
+
     <!-- Structured Data — Organization -->
     <script type="application/ld+json">
       {

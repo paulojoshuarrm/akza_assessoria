@@ -1,5 +1,5 @@
-@import url("https://api.fontshare.com/v2/css?f[]=general-sans@200,300,400,500,600,700,800&f[]=jetbrains-mono@400,500&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&display=swap");
+/* Fonts loaded via <link rel="stylesheet"> in index.html — keeps the CSS
+   parser free to start applying Tailwind utilities without a serial wait. */
 
 @tailwind base;
 @tailwind components;

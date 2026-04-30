@@ -297,7 +297,7 @@ function ProjectTile({ project, index }) {
           position: "relative",
           height: project.featured ? 280 : 180,
           backgroundImage:
-            "url('/materiais/bg-glass-panel.jpg'), linear-gradient(135deg, rgba(31,74,62,0.85), rgba(7,14,16,0.95))",
+            "url('/materiais/bg-glass-panel.webp'), linear-gradient(135deg, rgba(31,74,62,0.85), rgba(7,14,16,0.95))",
           backgroundSize: "cover, auto",
           backgroundPosition: "center",
           backgroundBlendMode: "overlay",

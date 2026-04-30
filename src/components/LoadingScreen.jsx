@@ -116,7 +116,10 @@ export default function LoadingScreen({ onComplete }) {
             <img
               src="/logo-sage-light.webp"
               alt="Akza Digital Strategy"
+              width="520"
+              height="89"
               draggable={false}
+              fetchpriority="high"
             />
           </div>
         </div>
